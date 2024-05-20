@@ -3,7 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
-import { User } from './database/entities/user.entity';
+import { UserModule } from './user/user.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -17,12 +19,15 @@ import { User } from './database/entities/user.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User], // Add all your entities here
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true, // For development only
       }),
       inject: [ConfigService],
     }),
     DatabaseModule,
+    UserModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

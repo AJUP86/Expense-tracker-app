@@ -1,11 +1,22 @@
+import { Expense } from './entities/expense.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { DatabaseService } from './database.service';
+import { Budget } from './entities/budget.entity';
+import { Category } from './entities/category.entity';
+import { PaymentMethod } from './entities/payment-method.entity';
+import { Invitation } from './entities/invitation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  providers: [DatabaseService],
-  exports: [DatabaseService],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Budget,
+      Category,
+      Expense,
+      PaymentMethod,
+      Invitation,
+    ]),
+  ],
 })
 export class DatabaseModule {}

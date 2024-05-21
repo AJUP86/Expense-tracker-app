@@ -6,6 +6,11 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BudgetModule } from './budget/budget.module';
+import { CategoryModule } from './category/category.module';
+import { ExpenseModule } from './expenses/expense.module';
+import { NotificationService } from './notification/notification.service';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -26,8 +31,12 @@ import { AppService } from './app.service';
     }),
     DatabaseModule,
     UserModule,
+    BudgetModule,
+    CategoryModule,
+    ExpenseModule,
+    NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, NotificationService],
 })
 export class AppModule {}

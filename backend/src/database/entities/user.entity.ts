@@ -30,6 +30,9 @@ export class User {
   @OneToMany(() => Budget, (budget) => budget.user)
   budgets: Budget[];
 
+  @OneToMany(() => Budget, (budget) => budget.owner)
+  ownedBudgets: Budget[];
+
   @OneToMany(() => Invitation, (invitation) => invitation.sender)
   sentInvitations: Invitation[];
 

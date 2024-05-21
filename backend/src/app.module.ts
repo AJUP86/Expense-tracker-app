@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BudgetModule } from './budget/budget.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BudgetModule } from './budget/budget.module';
     DatabaseModule,
     UserModule,
     BudgetModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

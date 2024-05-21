@@ -33,6 +33,9 @@ export class Budget {
   @ManyToOne(() => User, (user) => user.budgets)
   user: User;
 
+  @ManyToOne(() => User, (user) => user.ownedBudgets)
+  owner: User;
+
   @OneToMany(() => Category, (category) => category.budget)
   categories: Category[];
 

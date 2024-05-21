@@ -1,16 +1,9 @@
 // src/database/entities/expense.entity.ts
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Index,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Category } from './category.entity';
-import { PaymentMethod } from './payment-method.entity';
+import { PaymentMethodType } from '../enums/payment-method.enum';
 
 @Entity()
-@Index(['date'])
 export class Expense {
   @PrimaryGeneratedColumn()
   expense_id: number;
@@ -27,6 +20,9 @@ export class Expense {
   @ManyToOne(() => Category, (category) => category.expenses)
   category: Category;
 
-  @ManyToOne(() => PaymentMethod, (paymentMethod) => paymentMethod.expenses)
-  paymentMethod: PaymentMethod;
+  @Column({
+    type: 'enum',
+    enum: PaymentMethodType,
+  })
+  paymentMethod: PaymentMethodType;
 }

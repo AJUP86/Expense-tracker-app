@@ -2,7 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PaymentMethodType } from '../../database/enums/payment-method.enum';
 
-export class CreateExpenseDto {
+export class UpdateExpenseDto {
   @ApiProperty({
     example: 'Grocery shopping',
     description: 'The description of the expense',

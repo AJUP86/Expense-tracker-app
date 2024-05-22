@@ -4,19 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Budget } from './entities/budget.entity';
 import { Category } from './entities/category.entity';
-import { PaymentMethod } from './entities/payment-method.entity';
 import { Invitation } from './entities/invitation.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      User,
-      Budget,
-      Category,
-      Expense,
-      PaymentMethod,
-      Invitation,
-    ]),
+    TypeOrmModule.forFeature([User, Budget, Category, Expense, Invitation]),
   ],
 })
 export class DatabaseModule {}

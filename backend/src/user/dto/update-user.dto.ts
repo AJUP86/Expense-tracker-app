@@ -1,15 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
-  @ApiProperty({ example: 'John', description: 'First name of the user' })
-  readonly firstName?: string;
+  @ApiPropertyOptional({
+    example: 'johndoe',
+    description: 'Username of the user',
+  })
+  readonly username?: string;
 
-  @ApiProperty({ example: 'Doe', description: 'Last name of the user' })
-  readonly lastName?: string;
-
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'john.doe@example.com',
     description: 'Email of the user',
   })
   readonly email?: string;
+
+  @ApiPropertyOptional({
+    example: 'google',
+    description: 'OAuth provider of the user',
+  })
+  readonly oauth_provider?: string;
+
+  @ApiPropertyOptional({
+    example: '1234567890',
+    description: 'OAuth ID of the user',
+  })
+  readonly oauth_id?: string;
 }

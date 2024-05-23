@@ -8,31 +8,56 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { Budget } from '../database/entities/budget.entity';
 
+@ApiTags('budgets')
 @Controller('budgets')
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a budget' })
+  @ApiResponse({
+    status: 201,
+    description: 'The budget has been successfully created.',
+    type: Budget,
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   create(@Body() createBudgetDto: CreateBudgetDto): Promise<Budget> {
     return this.budgetService.create(createBudgetDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all budgets' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all budgets.',
+    type: [Budget],
+  })
   findAll(): Promise<Budget[]> {
     return this.budgetService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a budget by ID' })
+  @ApiResponse({ status: 200, description: 'Return the budget.', type: Budget })
+  @ApiResponse({ status: 404, description: 'Budget not found' })
   findOne(@Param('id') id: number): Promise<Budget> {
     return this.budgetService.findOne(id);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update a budget' })
+  @ApiResponse({
+    status: 200,
+    description: 'The budget has been successfully updated.',
+    type: Budget,
+  })
+  @ApiResponse({ status: 404, description: 'Budget not found' })
   update(
     @Param('id') id: number,
     @Body() updateBudgetDto: UpdateBudgetDto,
@@ -41,6 +66,12 @@ export class BudgetController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a budget' })
+  @ApiResponse({
+    status: 200,
+    description: 'The budget has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'Budget not found' })
   remove(@Param('id') id: number): Promise<void> {
     return this.budgetService.remove(id);
   }

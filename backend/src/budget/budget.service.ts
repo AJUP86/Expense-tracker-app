@@ -6,6 +6,8 @@ import { Budget } from '../database/entities/budget.entity';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { User } from '../database/entities/user.entity';
+import { Category } from '../database/entities/category.entity';
+import { Expense } from '../database/entities/expense.entity';
 
 @Injectable()
 export class BudgetService {
@@ -14,6 +16,10 @@ export class BudgetService {
     private budgetRepository: Repository<Budget>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+    @InjectRepository(Expense)
+    private expenseRepository: Repository<Expense>,
   ) {}
 
   async create(createBudgetDto: CreateBudgetDto): Promise<Budget> {
@@ -27,9 +33,13 @@ export class BudgetService {
       ...createBudgetDto,
       user,
       owner: user,
-      remaining_amount: createBudgetDto.total_amount,
+      total_amount: 0, // initially zero, will be calculated from categories
+      remaining_amount: 0, // initially zero, will be calculated from expenses
     });
-    return this.budgetRepository.save(budget);
+    const savedBudget = await this.budgetRepository.save(budget);
+    await this.calculateTotalAmount(savedBudget.budget_id);
+    await this.calculateRemainingAmount(savedBudget.budget_id);
+    return savedBudget;
   }
 
   findAll(): Promise<Budget[]> {
@@ -57,11 +67,42 @@ export class BudgetService {
     if (!budget) {
       throw new NotFoundException('Budget not found');
     }
-    return this.budgetRepository.save(budget);
+    const savedBudget = await this.budgetRepository.save(budget);
+    await this.calculateTotalAmount(savedBudget.budget_id);
+    await this.calculateRemainingAmount(savedBudget.budget_id);
+    return savedBudget;
   }
 
   async remove(id: number): Promise<void> {
     const budget = await this.findOne(id);
     await this.budgetRepository.remove(budget);
+  }
+
+  async calculateTotalAmount(budgetId: number): Promise<void> {
+    const categories = await this.categoryRepository.find({
+      where: { budget: { budget_id: budgetId } },
+    });
+    const totalAmount = categories.reduce(
+      (sum, category) => sum + category.allocated_amount,
+      0,
+    );
+    await this.budgetRepository.update(budgetId, { total_amount: totalAmount });
+  }
+
+  async calculateRemainingAmount(budgetId: number): Promise<void> {
+    const categories = await this.categoryRepository.find({
+      where: { budget: { budget_id: budgetId } },
+      relations: ['expenses'],
+    });
+    const remainingAmount = categories.reduce((sum, category) => {
+      const categoryExpenses = category.expenses.reduce(
+        (categorySum, expense) => categorySum + expense.amount,
+        0,
+      );
+      return sum + (category.allocated_amount - categoryExpenses);
+    }, 0);
+    await this.budgetRepository.update(budgetId, {
+      remaining_amount: remainingAmount,
+    });
   }
 }

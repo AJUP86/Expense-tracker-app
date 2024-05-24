@@ -12,6 +12,7 @@ import { ExpenseModule } from './expenses/expense.module';
 import { NotificationService } from './notification/notification.service';
 import { NotificationModule } from './notification/notification.module';
 import { getTypeOrmConfig } from './config/typeorm.config';
+import { InvitationModule } from './invitation/invitation.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { getTypeOrmConfig } from './config/typeorm.config';
     CategoryModule,
     ExpenseModule,
     NotificationModule,
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService, NotificationService],

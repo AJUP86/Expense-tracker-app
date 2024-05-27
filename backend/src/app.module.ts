@@ -11,6 +11,7 @@ import { CategoryModule } from './category/category.module';
 import { ExpenseModule } from './expenses/expense.module';
 import { NotificationService } from './notification/notification.service';
 import { NotificationModule } from './notification/notification.module';
+import { InvitationModule } from './invitation/invitation.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { NotificationModule } from './notification/notification.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure this path is correct
         synchronize: true, // For development only
       }),
       inject: [ConfigService],
@@ -35,6 +36,7 @@ import { NotificationModule } from './notification/notification.module';
     CategoryModule,
     ExpenseModule,
     NotificationModule,
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService, NotificationService],

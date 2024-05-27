@@ -32,14 +32,6 @@ export class ExpenseService {
       category,
     });
 
-    // Update remaining amount in category and budget
-    category.remaining_amount -= createExpenseDto.amount;
-    await this.categoryRepository.save(category);
-
-    // Update the remaining amount in the budget
-    category.budget.remaining_amount -= createExpenseDto.amount;
-    await this.categoryRepository.save(category.budget);
-
     return this.expenseRepository.save(expense);
   }
 

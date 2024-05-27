@@ -11,7 +11,6 @@ import { CategoryModule } from './category/category.module';
 import { ExpenseModule } from './expenses/expense.module';
 import { NotificationService } from './notification/notification.service';
 import { NotificationModule } from './notification/notification.module';
-import { getTypeOrmConfig } from './config/typeorm.config';
 import { InvitationModule } from './invitation/invitation.module';
 
 @Module({
@@ -19,8 +18,16 @@ import { InvitationModule } from './invitation/invitation.module';
     ConfigModule.forRoot({ isGlobal: true }), // Load .env file
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) =>
-        getTypeOrmConfig(configService),
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure this path is correct
+        synchronize: true, // For development only
+      }),
       inject: [ConfigService],
     }),
     DatabaseModule,

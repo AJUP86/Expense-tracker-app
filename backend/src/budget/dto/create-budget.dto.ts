@@ -7,9 +7,6 @@ export class CreateBudgetDto {
   })
   readonly name: string;
 
-  @ApiProperty({ example: 1000, description: 'Total value of the budget' })
-  readonly total_amount: number;
-
   @ApiProperty({ example: new Date(), description: 'Start date of the budget' })
   readonly start_date: Date;
 

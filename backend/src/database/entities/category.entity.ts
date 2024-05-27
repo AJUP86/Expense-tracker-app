@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   Index,
+  JoinColumn,
 } from 'typeorm';
 import { Budget } from './budget.entity';
 import { Expense } from './expense.entity';
@@ -19,13 +20,14 @@ export class Category {
   @Column()
   name: string;
 
-  @Column('decimal')
+  @Column('decimal', { default: 0 })
   allocated_amount: number;
 
-  @Column('decimal')
+  @Column('decimal', { default: 0 })
   remaining_amount: number;
 
   @ManyToOne(() => Budget, (budget) => budget.categories)
+  @JoinColumn({ name: 'budget_id' })
   budget: Budget;
 
   @OneToMany(() => Expense, (expense) => expense.category)

@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -9,9 +8,9 @@ import { AppService } from './app.service';
 import { BudgetModule } from './budget/budget.module';
 import { CategoryModule } from './category/category.module';
 import { ExpenseModule } from './expenses/expense.module';
-import { NotificationService } from './notification/notification.service';
 import { NotificationModule } from './notification/notification.module';
 import { InvitationModule } from './invitation/invitation.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,8 +36,9 @@ import { InvitationModule } from './invitation/invitation.module';
     ExpenseModule,
     NotificationModule,
     InvitationModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, NotificationService],
+  providers: [AppService],
 })
 export class AppModule {}

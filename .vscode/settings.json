@@ -1,6 +1,6 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true
-    },
-    "prettier.endOfLine": "crlf"
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "prettier.endOfLine": "crlf"
 }

@@ -1,4 +1,3 @@
-// src/database/database.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -21,10 +20,15 @@ export class UserService {
     return this.userRepository.findOne({ where: { user_id: id } });
   }
 
+  findOneByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
   create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     await this.userRepository.update(id, updateUserDto);
     const updatedUser = await this.userRepository.findOne({
@@ -40,4 +44,3 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 }
-

@@ -23,7 +23,7 @@ export class AuthService {
         oauth_provider: 'google',
         oauth_id: id,
       };
-      await this.userService.create(createUserDto);
+      user = await this.userService.create(createUserDto);
     }
 
     return user;

@@ -11,6 +11,7 @@ import { User } from './user.entity';
 import { Category } from './category.entity';
 import { Expense } from './expense.entity';
 import { Invitation } from './invitation.entity';
+import { SharedBudget } from './shared-budget.entity';
 
 @Entity()
 export class Budget {
@@ -48,4 +49,7 @@ export class Budget {
 
   @OneToMany(() => Invitation, (invitation) => invitation.budget)
   invitations: Invitation[];
+
+  @OneToMany(() => SharedBudget, (sharedBudget) => sharedBudget.budget)
+  sharedBudgets: SharedBudget[]; // Tracks users and roles in this budget
 }

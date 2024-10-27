@@ -1,5 +1,4 @@
 import { AuthService } from './auth.service';
-// src/auth/strategies/google.strategy.ts
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

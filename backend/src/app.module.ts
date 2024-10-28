@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -6,6 +5,13 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BudgetModule } from './budget/budget.module';
+import { CategoryModule } from './category/category.module';
+import { ExpenseModule } from './expenses/expense.module';
+import { NotificationModule } from './notification/notification.module';
+import { InvitationModule } from './invitation/invitation.module';
+import { AuthModule } from './auth/auth.module';
+import { SharedBudgetModule } from './shared-budget/shared-budget.module';
 
 @Module({
   imports: [
@@ -19,13 +25,20 @@ import { AppService } from './app.service';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure this path is correct
         synchronize: true, // For development only
       }),
       inject: [ConfigService],
     }),
     DatabaseModule,
     UserModule,
+    BudgetModule,
+    CategoryModule,
+    ExpenseModule,
+    NotificationModule,
+    InvitationModule,
+    AuthModule,
+    SharedBudgetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

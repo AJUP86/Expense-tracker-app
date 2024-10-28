@@ -4,13 +4,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  Index,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
-import { PaymentMethod } from './payment-method.entity';
+import { Budget } from './budget.entity';
+import { PaymentMethodType } from '../enums/payment-method.enum';
 
 @Entity()
-@Index(['date'])
 export class Expense {
   @PrimaryGeneratedColumn()
   expense_id: number;
@@ -25,8 +25,16 @@ export class Expense {
   date: Date;
 
   @ManyToOne(() => Category, (category) => category.expenses)
+  @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  @ManyToOne(() => PaymentMethod, (paymentMethod) => paymentMethod.expenses)
-  paymentMethod: PaymentMethod;
+  @ManyToOne(() => Budget, (budget) => budget.expenses)
+  @JoinColumn({ name: 'budget_id' })
+  budget: Budget;
+
+  @Column({
+    type: 'enum',
+    enum: PaymentMethodType,
+  })
+  paymentMethod: PaymentMethodType;
 }

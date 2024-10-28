@@ -14,6 +14,10 @@
     <main class="p-8">
       <h1 class="mb-6 text-4xl font-bold text-gray-900">Dashboard</h1>
       <p class="text-lg text-gray-700">Welcome back, {{ userName }}.</p>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CreateBudget />
+        <MyBudgets />
+      </div>
 
       <!-- Placeholder for future dashboard content -->
       <div

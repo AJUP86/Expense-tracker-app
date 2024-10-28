@@ -11,6 +11,7 @@ import { ExpenseModule } from './expenses/expense.module';
 import { NotificationModule } from './notification/notification.module';
 import { InvitationModule } from './invitation/invitation.module';
 import { AuthModule } from './auth/auth.module';
+import { SharedBudgetModule } from './shared-budget/shared-budget.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     NotificationModule,
     InvitationModule,
     AuthModule,
+    SharedBudgetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,6 +7,8 @@ import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { User } from '../database/entities/user.entity';
 import { Category } from '../database/entities/category.entity';
+import { Role } from 'src/database/enums/roles.enum';
+import { SharedBudgetService } from 'src/shared-budget/shared-budget.service';
 
 @Injectable()
 export class BudgetService {
@@ -17,6 +19,7 @@ export class BudgetService {
     private userRepository: Repository<User>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    private readonly sharedBudgetService: SharedBudgetService,
   ) {}
 
   async create(createBudgetDto: CreateBudgetDto): Promise<Budget> {
@@ -33,7 +36,15 @@ export class BudgetService {
       total_amount: 0, // initially zero, will be calculated from categories
       remaining_amount: 0, // initially zero, will be calculated from expenses
     });
-    return this.budgetRepository.save(budget);
+    const savedBudget = await this.budgetRepository.save(budget);
+
+    await this.sharedBudgetService.createSharedBudget({
+      user_id: user.user_id,
+      budget_id: savedBudget.budget_id,
+      role: Role.GroupOwner,
+    });
+
+    return savedBudget;
   }
 
   findAll(): Promise<Budget[]> {
@@ -67,5 +78,6 @@ export class BudgetService {
   async remove(id: number): Promise<void> {
     const budget = await this.findOne(id);
     await this.budgetRepository.remove(budget);
+    await this.sharedBudgetService.removeSharedBudgetsForBudget(id);
   }
 }

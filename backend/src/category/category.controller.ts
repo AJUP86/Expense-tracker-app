@@ -7,15 +7,21 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from '../database/entities/category.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/database/enums/roles.enum';
 
 @ApiTags('categories')
 @Controller('categories')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -27,6 +33,7 @@ export class CategoryController {
     type: Category,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @Roles(Role.GroupOwner, Role.GroupCoOwner)
   create(@Body() createCategoryDto: CreateCategoryDto): Promise<Category> {
     return this.categoryService.create(createCategoryDto);
   }
@@ -38,6 +45,7 @@ export class CategoryController {
     description: 'Return all categories.',
     type: [Category],
   })
+  @Roles(Role.GroupParticipant)
   findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
@@ -76,6 +84,7 @@ export class CategoryController {
     description: 'The category has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'Category not found' })
+  @Roles(Role.GroupOwner)
   remove(@Param('id') id: number): Promise<void> {
     return this.categoryService.remove(id);
   }

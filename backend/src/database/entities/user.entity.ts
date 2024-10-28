@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Budget } from './budget.entity';
 import { Invitation } from './invitation.entity';
+import { Role } from '../enums/roles.enum';
+import { SharedBudget } from './shared-budget.entity';
 
 @Entity()
 @Index(['username'], { unique: true })
@@ -38,4 +40,7 @@ export class User {
 
   @OneToMany(() => Invitation, (invitation) => invitation.receiver)
   receivedInvitations: Invitation[];
+
+  @OneToMany(() => SharedBudget, (sharedBudget) => sharedBudget.user)
+  sharedBudgets: SharedBudget[];
 }

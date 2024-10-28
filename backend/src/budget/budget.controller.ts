@@ -1,3 +1,4 @@
+import { RolesGuard } from './../auth/roles.guard';
 // src/budget/budget.controller.ts
 import {
   Controller,
@@ -7,15 +8,20 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { Budget } from '../database/entities/budget.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/database/enums/roles.enum';
 
 @ApiTags('budgets')
 @Controller('budgets')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
@@ -27,6 +33,7 @@ export class BudgetController {
     type: Budget,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @Roles(Role.GroupOwner)
   create(@Body() createBudgetDto: CreateBudgetDto): Promise<Budget> {
     return this.budgetService.create(createBudgetDto);
   }
@@ -58,6 +65,7 @@ export class BudgetController {
     type: Budget,
   })
   @ApiResponse({ status: 404, description: 'Budget not found' })
+  @Roles(Role.GroupOwner, Role.GroupCoOwner)
   update(
     @Param('id') id: number,
     @Body() updateBudgetDto: UpdateBudgetDto,
@@ -72,6 +80,7 @@ export class BudgetController {
     description: 'The budget has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'Budget not found' })
+  @Roles(Role.GroupOwner)
   remove(@Param('id') id: number): Promise<void> {
     return this.budgetService.remove(id);
   }

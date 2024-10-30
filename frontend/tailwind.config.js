@@ -1,20 +1,25 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}', 
-  ],
+module.exports = {
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        'brutal-black': '#101010',
-        'brutal-white': '#f5f5f5',
-        'brutal-gray': '#747474',
-        'brutal-red': '#ff2e2e',
-        'brutal-blue': '#0066ff',
-      }
-    },
-  },
-  plugins: [],
-}
+        haha: '#FFFFFF',
+        black: '#000000',
+        darkGray: '#333333',
+        lightGray: '#CCCCCC',
+        red: '#FF0000',
+        blue: '#0000FF',
+        yellow: '#FFFF00',
+        beige: '#f7f1eb',
+        customBlue: '#c1d7e0'
+      },
 
+      fontFamily: {
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
+        display: ['Impact', 'Arial Black', 'sans-serif']
+      }
+    }
+  },
+  plugins: []
+}

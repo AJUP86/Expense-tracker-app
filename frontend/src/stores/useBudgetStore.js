@@ -33,7 +33,7 @@ export const useBudgetStore = defineStore('budget', () => {
       budgets.value.push(response.data)
     } catch (err) {
       console.error('Failed to create budget:', err)
-      error.value = 'Unable to creat budget.'
+      error.value = 'Unable to create budget.'
       throw err
     } finally {
       isLoading.value = false

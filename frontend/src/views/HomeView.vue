@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-white">
+  <div class="flex flex-col items-center justify-center min-h-screen pattern-background">
     <header class="mb-8 text-center">
       <h1 class="text-5xl font-extrabold text-gray-900">Expense Tracker</h1>
     </header>
@@ -21,4 +21,10 @@ const redirectToAuth = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.pattern-background {
+  @apply bg-customBlue;
+  background-image: radial-gradient(#000000 0.5px, transparent 0.5px);
+  background-size: 4px 4px;
+}
+</style>

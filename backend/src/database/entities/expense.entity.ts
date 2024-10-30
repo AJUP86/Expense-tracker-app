@@ -35,6 +35,8 @@ export class Expense {
   @Column({
     type: 'enum',
     enum: PaymentMethodType,
+    nullable: true,
+    default: PaymentMethodType.MASTERCARD,
   })
   paymentMethod: PaymentMethodType;
 }

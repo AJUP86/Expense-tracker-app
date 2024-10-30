@@ -28,7 +28,12 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const jwt = await this.authService.login(req.user);
-    res.cookie('jwt', jwt.access_token, { httpOnly: true });
+    res.cookie('jwt', jwt.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
     res.redirect('http://localhost:5173/dashboard');
   }
 }

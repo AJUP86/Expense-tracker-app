@@ -30,18 +30,23 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter } from 'vue-router'
 import CreateBudget from '../components/CreateBudget.vue'
 import MyBudgets from '../components/MyBudgets.vue'
+
 const authStore = useAuthStore()
 const router = useRouter()
 
 const userName = computed(() => authStore.user?.username || 'User')
 
 const logout = async () => {
-  await authStore.logout()
-  router.push('/')
+  try {
+    await authStore.logout()
+    router.push('/')
+  } catch (err) {
+    console.error('Logout failed:', err)
+  }
 }
 
 onMounted(() => {
-  if (!authStore.isAuthenticated) {
+  if (!authStore.isAuthenticated && !authStore.isLoading) {
     router.push('/')
   }
 })

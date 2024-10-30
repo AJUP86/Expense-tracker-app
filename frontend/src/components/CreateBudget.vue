@@ -55,20 +55,38 @@ const name = ref('')
 const startDate = ref('')
 const endDate = ref('')
 const budgetStore = useBudgetStore()
+const error = ref(null)
+const isLoading = ref(false)
 
 const submitBudget = async () => {
+  isLoading.value = true
   try {
     await budgetStore.createBudget({
       name: name.value,
       start_date: startDate.value,
-      end_date: endDate.value,
-      userId: budgetStore.currentBudget?.userId || 1
+      end_date: endDate.value
     })
 
     name.value = ''
     startDate.value = ''
     endDate.value = ''
-  } catch (err) {}
+  } catch (err) {
+    if (err.response) {
+      // Server responded with a status other than 2xx
+      console.error('Error response:', err.response.data)
+      error.value = err.response.data.message || 'Unable to create budget.'
+    } else if (err.request) {
+      // No response received
+      console.error('No response:', err.request)
+      error.value = 'No response from server.'
+    } else {
+      // Other errors
+      console.error('Error:', err.message)
+      error.value = 'An error occurred.'
+    }
+  } finally {
+    isLoading.value = false // End loading
+  }
 }
 </script>
 

@@ -9,6 +9,7 @@ import {
   Delete,
   Put,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BudgetService } from './budget.service';
@@ -21,7 +22,7 @@ import { Role } from 'src/database/enums/roles.enum';
 
 @ApiTags('budgets')
 @Controller('budgets')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
@@ -34,8 +35,14 @@ export class BudgetController {
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @Roles(Role.GroupOwner)
-  create(@Body() createBudgetDto: CreateBudgetDto): Promise<Budget> {
-    return this.budgetService.create(createBudgetDto);
+  @UseGuards(RolesGuard)
+  async create(
+    @Body() createBudgetDto: CreateBudgetDto,
+    @Request() req,
+  ): Promise<Budget> {
+    const userId = req.user.userId;
+    const budget = this.budgetService.create(createBudgetDto, userId);
+    return budget;
   }
 
   @Get()
@@ -45,7 +52,9 @@ export class BudgetController {
     description: 'Return all budgets.',
     type: [Budget],
   })
-  findAll(): Promise<Budget[]> {
+  @UseGuards(RolesGuard)
+  @Roles(Role.GroupOwner, Role.GroupParticipant)
+  async findAll(): Promise<Budget[]> {
     return this.budgetService.findAll();
   }
 
@@ -53,6 +62,8 @@ export class BudgetController {
   @ApiOperation({ summary: 'Get a budget by ID' })
   @ApiResponse({ status: 200, description: 'Return the budget.', type: Budget })
   @ApiResponse({ status: 404, description: 'Budget not found' })
+  @UseGuards(RolesGuard)
+  @Roles(Role.GroupOwner, Role.GroupParticipant)
   findOne(@Param('id') id: number): Promise<Budget> {
     return this.budgetService.findOne(id);
   }
@@ -81,6 +92,7 @@ export class BudgetController {
   })
   @ApiResponse({ status: 404, description: 'Budget not found' })
   @Roles(Role.GroupOwner)
+  @UseGuards(RolesGuard)
   remove(@Param('id') id: number): Promise<void> {
     return this.budgetService.remove(id);
   }

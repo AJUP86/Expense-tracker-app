@@ -19,7 +19,7 @@ export const useBudgetStore = defineStore('budget', () => {
       budgets.value = response.data
     } catch (err) {
       console.error('Failed to fetch budgets:', err)
-      error.value = response.data
+      error.value = err.response?.data?.message || 'Unable to fetch budgets.'
     } finally {
       isLoading.value = false
     }
@@ -33,7 +33,7 @@ export const useBudgetStore = defineStore('budget', () => {
       budgets.value.push(response.data)
     } catch (err) {
       console.error('Failed to create budget:', err)
-      error.value = 'Unable to create budget.'
+      error.value = err.response?.data?.message || 'Unable to create budget.'
       throw err
     } finally {
       isLoading.value = false
@@ -48,9 +48,9 @@ export const useBudgetStore = defineStore('budget', () => {
       currentBudget.value = response.data
     } catch (err) {
       console.error('Failed to fetch budget:', err)
-      error.Value = 'Unable to fetch budget.'
+      error.value = err.response?.data?.message || 'Unable to fetch budget.'
     } finally {
-      isLoading = false
+      isLoading.value = false
     }
   }
 
@@ -65,7 +65,7 @@ export const useBudgetStore = defineStore('budget', () => {
       }
     } catch (err) {
       console.error('Failed to update budget:', err)
-      error.value = 'Unable to update budget.'
+      error.value = err.response?.data?.message || 'Unable to update budget.'
       throw err
     } finally {
       isLoading.value = false
@@ -80,7 +80,7 @@ export const useBudgetStore = defineStore('budget', () => {
       budgets.value = budgets.value.filter((budget) => budget.budget_id !== budgetId)
     } catch (err) {
       console.error('Failed to delete budget:', err)
-      error.value = 'Unable to delete budget.'
+      error.value = err.response?.data?.message || 'Unable to delete budget.'
       throw err
     } finally {
       isLoading.value = false

@@ -14,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
     try {
       const response = await apiClient.get('/auth/profile')
+      console.log('Profile Response:', response.data) // Debugging
       user.value = response.data
     } catch (err) {
       console.error('Failed to fetch profile:', err)

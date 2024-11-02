@@ -1,24 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SharedBudget } from 'src/database/entities/shared-budget.entity';
 import { CreateSharedBudgetDto } from './dto/create-shared-budget.dto';
 import { UpdateSharedBudgetDto } from './dto/update-shared-budget.dto';
 import { Role } from 'src/database/enums/roles.enum';
+import { User } from 'src/database/entities/user.entity';
+import { Budget } from 'src/database/entities/budget.entity';
 
 @Injectable()
 export class SharedBudgetService {
   constructor(
     @InjectRepository(SharedBudget)
     private readonly sharedBudgetRepository: Repository<SharedBudget>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>, // Inject UserRepository
+    @InjectRepository(Budget)
+    private readonly budgetRepository: Repository<Budget>,
   ) {}
 
   async createSharedBudget(
     createSharedBudgetDto: CreateSharedBudgetDto,
   ): Promise<SharedBudget> {
-    const sharedBudget = this.sharedBudgetRepository.create(
-      createSharedBudgetDto,
-    );
+    const { user_id, budget_id, role } = createSharedBudgetDto;
+    const user = await this.userRepository.findOne({ where: { user_id } });
+    if (!user) {
+      throw new NotFoundException(`User with id ${user_id} not found`);
+    }
+
+    const budget = await this.budgetRepository.findOne({
+      where: { budget_id },
+    });
+    if (!budget) {
+      throw new NotFoundException(`Budget with id ${budget_id} not found`);
+    }
+
+    const sharedBudget = this.sharedBudgetRepository.create({
+      user,
+      budget,
+      role,
+    });
     return this.sharedBudgetRepository.save(sharedBudget);
   }
 

@@ -3,7 +3,10 @@
     <h2 class="text-3xl font-display mb-6 text-black">My Budgets</h2>
     <div v-if="isLoading" class="text-2xl text-darkGray">Loading budgets...</div>
     <div v-else>
-      <div class="shadow-wrapper">
+      <div v-if="budgets.length === 0" class="text-2xl font-semibold text-darkGray">
+        No budget has been created yet
+      </div>
+      <div v-else class="shadow-wrapper">
         <div class="shadow-background"></div>
         <div class="content-box p-4 bg-beige border-black">
           <ul class="divide-y divide-lightGray">

@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { Budget } from './budget.entity';
 import { Invitation } from './invitation.entity';
-import { Role } from '../enums/roles.enum';
 import { SharedBudget } from './shared-budget.entity';
 
 @Entity()

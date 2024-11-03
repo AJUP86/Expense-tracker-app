@@ -1,26 +1,25 @@
-<!-- src/views/DashboardView.vue -->
 <template>
-  <div class="min-h-screen bg-white">
-    <nav class="flex items-center justify-between p-6 border-b border-gray-300">
-      <div class="text-2xl font-extrabold text-gray-900">Expense Tracker</div>
+  <div class="min-h-screen pattern-background">
+    <!-- Navigation Bar -->
+    <nav class="flex items-center justify-between p-6 border-b border-lightGray bg-beige">
+      <div class="text-3xl font-display text-black">Expense Tracker</div>
       <button
         @click="logout"
-        class="px-4 py-2 text-sm font-semibold text-white bg-black hover:bg-gray-800 focus:outline-none transition-colors duration-300"
+        class="px-6 py-3 text-lg font-semibold text-black bg-white border-2 border-white rounded hover:bg-red focus:outline-none transition-colors duration-300"
       >
         Log Out
       </button>
     </nav>
-
+    <!-- Main Content -->
     <main class="p-8">
-      <h1 class="mb-6 text-4xl font-bold text-gray-900">Dashboard</h1>
-      <p class="text-lg text-gray-700">Welcome back, {{ userName }}.</p>
+      <h1 class="mb-6 text-5xl font-display text-black">Dashboard</h1>
+      <p class="text-2xl text-darkGray">Welcome back, {{ userName }}.</p>
 
-      <!-- Placeholder for future dashboard content -->
-      <div
-        class="mt-12 border-2 border-dashed border-gray-400 h-64 flex items-center justify-center"
-      >
-        <span class="text-gray-500">Your dashboard content will appear here.</span>
-      </div>
+      <!-- Budget Components -->
+      <section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CreateBudget />
+        <MyBudgets />
+      </section>
     </main>
   </div>
 </template>
@@ -29,6 +28,8 @@
 import { onMounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter } from 'vue-router'
+import CreateBudget from '../components/CreateBudget.vue'
+import MyBudgets from '../components/MyBudgets.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -36,18 +37,25 @@ const router = useRouter()
 const userName = computed(() => authStore.user?.username || 'User')
 
 const logout = async () => {
-  await authStore.logout()
-  router.push('/')
+  try {
+    await authStore.logout()
+    router.push('/')
+  } catch (err) {
+    console.error('Logout failed:', err)
+  }
 }
 
-// Ensure the user is authenticated
 onMounted(() => {
-  if (!authStore.isAuthenticated) {
+  if (!authStore.isAuthenticated && !authStore.isLoading) {
     router.push('/')
   }
 })
 </script>
 
 <style scoped>
-/* Add any custom styles here if necessary */
+.pattern-background {
+  @apply bg-customBlue;
+  background-image: radial-gradient(#000000 0.5px, transparent 0.5px);
+  background-size: 4px 4px;
+}
 </style>

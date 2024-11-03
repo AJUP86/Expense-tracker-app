@@ -23,15 +23,15 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore(pinia)
-  if (!authStore.isAuthenticated) {
-    await authStore.fetchUser()
+  if (to.meta.requiresAuth) {
+    if (!authStore.isAuthenticated) {
+      await authStore.fetchProfile()
+      if (!authStore.isAuthenticated) {
+        return next({ name: 'Login' })
+      }
+    }
   }
-
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/')
-  } else {
-    next()
-  }
+  next()
 })
 
 export default router

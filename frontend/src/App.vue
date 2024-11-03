@@ -9,7 +9,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 
 const authStore = useAuthStore()
 onMounted(async () => {
-  await authStore.fetchUser()
+  await authStore.fetchProfile()
 })
 </script>
 

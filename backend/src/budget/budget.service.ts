@@ -22,9 +22,12 @@ export class BudgetService {
     private readonly sharedBudgetService: SharedBudgetService,
   ) {}
 
-  async create(createBudgetDto: CreateBudgetDto): Promise<Budget> {
+  async create(
+    createBudgetDto: CreateBudgetDto,
+    userId: number,
+  ): Promise<Budget> {
     const user = await this.userRepository.findOne({
-      where: { user_id: createBudgetDto.userId },
+      where: { user_id: userId },
     });
     if (!user) {
       throw new NotFoundException('User not found');

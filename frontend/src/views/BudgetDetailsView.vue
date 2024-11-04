@@ -1,6 +1,7 @@
 <template>
   <div v-if="budget" class="p-6 bg-beige shadow-lg">
     <h2 class="text-3xl font-display mb-6 text-black">{{ budget.name }} Details</h2>
+    <p class="text-xl text-darkGray mb-4">Current amount: ${{ budget.total_amount || 0 }}</p>
     <div class="mb-6">
       <h3 class="text-2xl font-semibold text-darkGray">Categories</h3>
       <ul v-if="categories.length" class="mt-4 divide-y divide-lightGray">
@@ -41,8 +42,9 @@ const categories = computed(() => budget.value?.categories || [])
 const isLoading = computed(() => budgetStore.isLoading)
 const error = computed(() => budgetStore.error)
 
-const handleCategoryAdded = (newCategory) => {
-  budgetStore.addCategoryToCurrentBudget(newCategory)
+const handleCategoryAdded = async (newCategory) => {
+  await budgetStore.addCategoryToCurrentBudget(newCategory)
+  await budgetStore.fetchBudgetById(route.params.budgetId)
 }
 
 onMounted(async () => {

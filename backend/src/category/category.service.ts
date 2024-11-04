@@ -1,5 +1,5 @@
 // src/category/category.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../database/entities/category.entity';
@@ -9,6 +9,7 @@ import { Budget } from '../database/entities/budget.entity';
 
 @Injectable()
 export class CategoryService {
+  private readonly logger = new Logger(CategoryService.name);
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
@@ -17,11 +18,17 @@ export class CategoryService {
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    this.logger.log('Creating a new category...');
+
     const budget = await this.budgetRepository.findOne({
       where: { budget_id: createCategoryDto.budgetId },
       relations: ['user', 'invitations'],
     });
     if (!budget) {
+      this.logger.warn(
+        `Budget with ID ${createCategoryDto.budgetId} not found`,
+      );
+
       throw new NotFoundException('Budget not found');
     }
     const category = this.categoryRepository.create({
@@ -29,7 +36,26 @@ export class CategoryService {
       budget,
       remaining_amount: createCategoryDto.allocated_amount,
     });
-    return this.categoryRepository.save(category);
+    const savedCategory = await this.categoryRepository.save(category);
+
+    this.logger.log(
+      `Category created successfully with ID ${savedCategory.category_id}`,
+    );
+
+    const updatedCategory = await this.categoryRepository.findOne({
+      where: { category_id: category.category_id },
+      relations: ['budget', 'budget.user', 'budget.invitations'],
+    });
+
+    if (updatedCategory) {
+      this.logger.log(
+        `Refetching updated budget with ID ${createCategoryDto.budgetId}`,
+      );
+      updatedCategory.budget = await this.budgetRepository.findOne({
+        where: { budget_id: createCategoryDto.budgetId },
+      });
+    }
+    return updatedCategory;
   }
 
   findAll(): Promise<Category[]> {

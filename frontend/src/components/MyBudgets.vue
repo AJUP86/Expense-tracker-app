@@ -17,6 +17,9 @@
             >
               <div>
                 <h3 class="text-2xl font-semibold text-darkGray">{{ budget.name }}</h3>
+                <p class="text-xl font-bold text-darkGray">
+                  Current Amount: ${{ budget.total_amount || 0 }}
+                </p>
                 <p class="text-xl text-darkGray">
                   Duration: {{ formatDate(budget.start_date) }} - {{ formatDate(budget.end_date) }}
                 </p>

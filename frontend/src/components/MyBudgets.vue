@@ -26,7 +26,7 @@
                   @click="selectBudget(budget.budget_id)"
                   class="px-4 py-2 bg-blue text-2xl font-semibold text-white rounded-lg hover:bg-red focus:outline-none transition-colors duration-300"
                 >
-                  View
+                  Details
                 </button>
                 <button
                   @click="deleteBudget(budget.budget_id)"

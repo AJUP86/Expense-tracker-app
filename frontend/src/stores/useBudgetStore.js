@@ -45,10 +45,14 @@ export const useBudgetStore = defineStore('budget', () => {
     error.value = null
     try {
       const response = await apiClient.get(`/budgets/${budgetId}`)
-      currentBudget.value = response.data
+      currentBudget.value = {
+        ...response.data,
+        categories: Array.isArray(response.data.categories) ? response.data.categories : []
+      }
     } catch (err) {
       console.error('Failed to fetch budget:', err)
       error.value = err.response?.data?.message || 'Unable to fetch budget.'
+      throw err
     } finally {
       isLoading.value = false
     }
@@ -87,6 +91,20 @@ export const useBudgetStore = defineStore('budget', () => {
     }
   }
 
+  /**
+   * Adds a new category to the current budget's categories array.
+   * @param {Object} category - The category to add.
+   */
+  const addCategoryToCurrentBudget = async (category) => {
+    if (currentBudget.value && Array.isArray(currentBudget.value.categories)) {
+      currentBudget.value.categories.push(category)
+    } else {
+      console.warn('Cannot add category: currentBudget or categories array is not defined.')
+      // Optionally, you can refetch the budget to ensure data consistency
+      await fetchBudgetById(category.budgetId)
+    }
+  }
+
   return {
     budgets,
     currentBudget,
@@ -98,6 +116,7 @@ export const useBudgetStore = defineStore('budget', () => {
     createBudget,
     fetchBudgetById,
     updateBudget,
-    deleteBudget
+    deleteBudget,
+    addCategoryToCurrentBudget
   }
 })

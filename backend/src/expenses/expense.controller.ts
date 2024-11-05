@@ -7,10 +7,12 @@ import {
   Param,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
+import { PaymentMethodType } from '../database/enums/payment-method.enum';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { Expense } from '../database/entities/expense.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -34,14 +36,28 @@ export class ExpenseController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all expenses' })
+  @ApiOperation({ summary: 'Get all expenses with optional pagination' })
   @ApiResponse({
     status: 200,
-    description: 'Return all expenses.',
+    description: 'Returns all expenses.',
     type: [Expense],
   })
-  findAll(): Promise<Expense[]> {
-    return this.expenseService.findAll();
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<Expense[]> {
+    return this.expenseService.findAll(page, limit);
+  }
+
+  @Get('payment-methods')
+  @ApiOperation({ summary: 'Get available payment methods' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all payment methods',
+    type: [String],
+  })
+  getPaymentMethods(): string[] {
+    return Object.values(PaymentMethodType);
   }
 
   @Get(':id')

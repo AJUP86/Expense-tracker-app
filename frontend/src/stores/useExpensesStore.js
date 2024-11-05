@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import apiClient from '@/services/apiService'
+import apiClient, { fetchPaymentMethods } from '@/services/apiService'
 import { useBudgetStore } from './useBudgetStore'
 
 export const useExpensesStore = defineStore('expenses', () => {
   const expenses = ref([])
+  const paymentMethods = ref([])
   const isLoading = ref(false)
   const error = ref(null)
 
@@ -20,6 +21,16 @@ export const useExpensesStore = defineStore('expenses', () => {
       error.value = err.response?.data?.message || 'Unable to fetch expenses'
     } finally {
       isLoading.value = false
+    }
+  }
+
+  const fetchPaymentMethodsList = async () => {
+    try {
+      const response = await fetchPaymentMethods()
+      paymentMethods.value = response.data
+    } catch (err) {
+      console.error('Failed to fetch payment methods:', err)
+      error.value = 'Failed to load payment methods'
     }
   }
 
@@ -41,9 +52,11 @@ export const useExpensesStore = defineStore('expenses', () => {
 
   return {
     expenses,
+    paymentMethods,
     isLoading,
     error,
     fetchExpenses,
+    fetchPaymentMethodsList,
     addExpense
   }
 })

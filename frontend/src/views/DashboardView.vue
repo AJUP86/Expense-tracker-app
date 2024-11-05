@@ -19,6 +19,7 @@
       <section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
         <CreateBudget />
         <MyBudgets />
+        <AddExpense />
       </section>
     </main>
   </div>
@@ -30,6 +31,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { useRouter } from 'vue-router'
 import CreateBudget from '../components/CreateBudget.vue'
 import MyBudgets from '../components/MyBudgets.vue'
+import AddExpense from '@/components/AddExpense.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()

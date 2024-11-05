@@ -35,9 +35,12 @@ export class ExpenseService {
     return this.expenseRepository.save(expense);
   }
 
-  findAll(): Promise<Expense[]> {
+  async findAll(page = 1, limit = 10): Promise<Expense[]> {
+    const skip = (page - 1) * limit;
     return this.expenseRepository.find({
       relations: ['category', 'category.budget', 'category.budget.user'],
+      skip,
+      take: limit,
     });
   }
 

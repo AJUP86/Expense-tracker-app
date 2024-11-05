@@ -8,3 +8,5 @@ const apiClient = axios.create({
 })
 
 export default apiClient
+
+export const fetchPaymentMethods = () => apiClient.get('/expenses/payment-methods')
